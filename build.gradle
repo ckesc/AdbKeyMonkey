@@ -1,0 +1,4 @@
+apply from: 'javafx.plugin'
+dependencies {    
+    runtime fileTree(dir: 'libs', include: '*.jar')
+}
