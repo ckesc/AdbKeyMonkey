@@ -1,6 +1,7 @@
 package ru.ckesc.adbkeyboard;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -49,15 +50,19 @@ public class Main extends Application implements ConnectionListener {
         primaryStage.setTitle("Adb Key Monkey!");
         primaryStage.show();
 
-        scene.setFill(Color.WHEAT);
-
         initMap();
+        scene.setFill(Color.WHEAT);
         scene.setOnKeyReleased(new KeyEventHandler());
 
         deviceConnection = new ShellDeviceConnection();
         deviceConnection.setConnectionListener(this);
 
-        deviceConnection.connect();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                deviceConnection.connect();
+            }
+        });
     }
 
 
