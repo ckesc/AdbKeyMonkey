@@ -6,19 +6,25 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import ru.ckesc.adbkeyboard.connection.ConnectionListener;
+import ru.ckesc.adbkeyboard.connection.DeviceConnection;
+import ru.ckesc.adbkeyboard.connection.ShellDeviceConnection;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Main extends Application {
+public class Main extends Application implements ConnectionListener {
 
     private Map<KeyCode, Integer> adbEventMap = new HashMap<>();
+    private Scene scene;
+
     public static void main(String[] args) {
         launch(args);
     }
 
-    public DeviceConnection deviceConnection = new ShellDeviceConnection();
+    public DeviceConnection deviceConnection;
 
     private void initMap() {
 //        19 -->  "KEYCODE_DPAD_UP"
@@ -37,33 +43,32 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-//        primaryStage.setTitle("Adb keyboard");
-//        primaryStage.setScene(new Scene(root, 300, 275));
-//        primaryStage.show();
-//
-//        Keyboard keyboard = new Keyboard(
-//                new Key(KeyCode.LEFT),
-//                new Key(KeyCode.RIGHT));
 
-        final Keyboard keyboard = new Keyboard(new Key(KeyCode.A),
-                new Key(KeyCode.S),
-                new Key(KeyCode.D),
-                new Key(KeyCode.F),
-                new Key(KeyCode.LEFT),
-                new Key(KeyCode.RIGHT),
-                new Key(KeyCode.UP),
-                new Key(KeyCode.DOWN),
-                new Key(KeyCode.ENTER),
-                new Key(KeyCode.ESCAPE));
-
-        final Scene scene = new Scene(new Group(keyboard.createNode()));
+        scene = new Scene(new Group());
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Keyboard Example");
+        primaryStage.setTitle("Adb Key Monkey!");
         primaryStage.show();
+
+        scene.setFill(Color.WHEAT);
 
         initMap();
         scene.setOnKeyReleased(new KeyEventHandler());
+
+        deviceConnection = new ShellDeviceConnection();
+        deviceConnection.setConnectionListener(this);
+
+        deviceConnection.connect();
+    }
+
+
+    @Override
+    public void onConnectionLost() {
+        scene.setFill(Color.DARKRED);
+    }
+
+    @Override
+    public void onConnectionOk() {
+        scene.setFill(Color.WHITE);
     }
 
     private class KeyEventHandler implements EventHandler<KeyEvent> {
