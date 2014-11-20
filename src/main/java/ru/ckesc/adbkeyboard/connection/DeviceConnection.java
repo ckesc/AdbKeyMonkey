@@ -8,4 +8,6 @@ public interface DeviceConnection {
     void setConnectionListener(ConnectionListener connectionListener);
 
     void connect();
+
+    void disconnect();
 }

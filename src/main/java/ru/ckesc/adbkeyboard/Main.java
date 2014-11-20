@@ -65,6 +65,11 @@ public class Main extends Application implements ConnectionListener {
         });
     }
 
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        deviceConnection.disconnect();
+    }
 
     @Override
     public void onConnectionLost() {

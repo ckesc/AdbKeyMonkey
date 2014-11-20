@@ -77,6 +77,17 @@ public class ShellDeviceConnection implements DeviceConnection {
     }
 
     @Override
+    public void disconnect() {
+        connectionListener.onConnectionLost();
+        try {
+            adbStdIn.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        adbShellProcess.destroy();
+    }
+
+    @Override
     public void setConnectionListener(ConnectionListener connectionListener) {
         this.connectionListener = connectionListener;
     }
