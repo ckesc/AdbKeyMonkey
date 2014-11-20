@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import ru.ckesc.adbkeyboard.connection.ConnectionListener;
 import ru.ckesc.adbkeyboard.connection.DeviceConnection;
-import ru.ckesc.adbkeyboard.connection.ShellDeviceConnection;
+import ru.ckesc.adbkeyboard.connection.MonkeyDeviceConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,8 @@ public class Main extends Application implements ConnectionListener {
         scene.setFill(Color.WHEAT);
         scene.setOnKeyReleased(new KeyEventHandler());
 
-        deviceConnection = new ShellDeviceConnection();
+//        deviceConnection = new ShellDeviceConnection();
+        deviceConnection = new MonkeyDeviceConnection();
         deviceConnection.setConnectionListener(this);
 
         Platform.runLater(new Runnable() {
