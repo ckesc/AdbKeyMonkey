@@ -1,9 +1,9 @@
 package ru.ckesc.adbkeyboard.connection;
 
 public interface DeviceConnection {
-    void sendEventToDevice(int eventType);
+    void sendEventToDevice(int eventType, KeyAction keyAction);
 
-    void sendTextToDevice(String text);
+    void sendTextToDevice(String text, KeyAction keyAction);
 
     void setConnectionListener(ConnectionListener connectionListener);
 

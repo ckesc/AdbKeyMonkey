@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import ru.ckesc.adbkeyboard.connection.ConnectionListener;
 import ru.ckesc.adbkeyboard.connection.DeviceConnection;
+import ru.ckesc.adbkeyboard.connection.KeyAction;
 import ru.ckesc.adbkeyboard.connection.MonkeyDeviceConnection;
 
 import java.util.HashMap;
@@ -52,7 +53,8 @@ public class Main extends Application implements ConnectionListener {
 
         initMap();
         scene.setFill(Color.WHEAT);
-        scene.setOnKeyReleased(new KeyEventHandler());
+        scene.setOnKeyPressed(new KeyDownEventHandler());
+        scene.setOnKeyReleased(new KeyUpEventHandler());
 
 //        deviceConnection = new ShellDeviceConnection();
         deviceConnection = new MonkeyDeviceConnection();
@@ -82,13 +84,24 @@ public class Main extends Application implements ConnectionListener {
         scene.setFill(Color.WHITE);
     }
 
-    private class KeyEventHandler implements EventHandler<KeyEvent> {
+    private class KeyDownEventHandler implements EventHandler<KeyEvent> {
         @Override
         public void handle(KeyEvent keyEvent) {
             if (adbEventMap.containsKey(keyEvent.getCode())) {
-                deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()));
+                deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.DOWN);
             } else {
-                deviceConnection.sendTextToDevice(keyEvent.getText());
+                deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.DOWN);
+            }
+        }
+    }
+
+    private class KeyUpEventHandler implements EventHandler<KeyEvent> {
+        @Override
+        public void handle(KeyEvent keyEvent) {
+            if (adbEventMap.containsKey(keyEvent.getCode())) {
+                deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.UP);
+            } else {
+                deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.UP);
             }
         }
     }

@@ -10,13 +10,27 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     private IChimpDevice device;
 
     @Override
-    public void sendEventToDevice(int eventType) {
-        device.press(String.valueOf(eventType), TouchPressType.DOWN_AND_UP);
+    public void sendEventToDevice(int eventType, KeyAction keyAction) {
+        switch (keyAction) {
+            case UP:
+                device.press(String.valueOf(eventType), TouchPressType.UP);
+                break;
+            case DOWN:
+                device.press(String.valueOf(eventType), TouchPressType.DOWN);
+                break;
+        }
     }
 
     @Override
-    public void sendTextToDevice(String text) {
-        device.press(text, TouchPressType.DOWN_AND_UP);
+    public void sendTextToDevice(String text, KeyAction keyAction) {
+        switch (keyAction) {
+            case UP:
+                device.press(text, TouchPressType.UP);
+                break;
+            case DOWN:
+                device.press(text, TouchPressType.DOWN);
+                break;
+        }
     }
 
     @Override

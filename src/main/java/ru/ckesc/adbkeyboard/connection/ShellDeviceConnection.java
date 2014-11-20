@@ -14,37 +14,6 @@ public class ShellDeviceConnection implements DeviceConnection {
     public ShellDeviceConnection() {
     }
 
-    @Override
-    public void sendEventToDevice(int eventType) {
-
-        String s = String.format("adb: send keyevent %d", eventType);
-        System.out.println(s);
-        try {
-            adbStdIn.write(String.format("input keyevent %d%n", eventType));
-            adbStdIn.flush();
-            setConnected(true);
-        } catch (IOException e) {
-            setConnected(false);
-            e.printStackTrace();
-            restartStd();
-        }
-    }
-
-    @Override
-    public void sendTextToDevice(String text) {
-        String s = String.format("adb: send text: %s", text);
-        System.out.println(s);
-        try {
-            adbStdIn.write(String.format("input text %s", text));
-            adbStdIn.flush();
-            setConnected(true);
-        } catch (IOException e) {
-            setConnected(false);
-            e.printStackTrace();
-            connectionListener.onConnectionLost();
-            restartStd();
-        }
-    }
 
     private void restartStd() {
         try {
@@ -85,6 +54,41 @@ public class ShellDeviceConnection implements DeviceConnection {
             e.printStackTrace();
         }
         adbShellProcess.destroy();
+    }
+
+    @Override
+    public void sendEventToDevice(int eventType, KeyAction keyAction) {
+        if (keyAction == KeyAction.UP) {
+            String s = String.format("adb: send keyevent %d", eventType);
+            System.out.println(s);
+            try {
+                adbStdIn.write(String.format("input keyevent %d%n", eventType));
+                adbStdIn.flush();
+                setConnected(true);
+            } catch (IOException e) {
+                setConnected(false);
+                e.printStackTrace();
+                restartStd();
+            }
+        }
+    }
+
+    @Override
+    public void sendTextToDevice(String text, KeyAction keyAction) {
+        if (keyAction == KeyAction.UP) {
+            String s = String.format("adb: send text: %s", text);
+            System.out.println(s);
+            try {
+                adbStdIn.write(String.format("input text %s", text));
+                adbStdIn.flush();
+                setConnected(true);
+            } catch (IOException e) {
+                setConnected(false);
+                e.printStackTrace();
+                connectionListener.onConnectionLost();
+                restartStd();
+            }
+        }
     }
 
     @Override
