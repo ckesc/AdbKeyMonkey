@@ -53,8 +53,8 @@ public class Main extends Application implements ConnectionListener {
         scene.setOnKeyPressed(new KeyDownEventHandler());
         scene.setOnKeyReleased(new KeyUpEventHandler());
 
-        deviceConnection = new ShellDeviceConnection();
-//        deviceConnection = new MonkeyDeviceConnection();
+//        deviceConnection = new ShellDeviceConnection();
+        deviceConnection = new MonkeyDeviceConnection();
         deviceConnection.setConnectionListener(this);
 
         Platform.runLater(new Runnable() {
