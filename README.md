@@ -6,6 +6,8 @@ Tool for control android device via PC keyboard
 
 [Download](https://github.com/ckesc/AdbKeyMonkey/releases)
 
+Speed of operation is achieved through the use of [MonkeyRunner API] (http://developer.android.com/tools/help/monkeyrunner_concepts.html)
+
 ### Requirement:
 Java 7 runtime *(JRE7)*
 
