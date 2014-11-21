@@ -4,6 +4,8 @@
 
 Tool for control android device via PC keyboard
 
+[Download](https://github.com/ckesc/AdbKeyMonkey/releases)
+
 ### Requirement:
 Java 7 runtime *(JRE7)*
 
