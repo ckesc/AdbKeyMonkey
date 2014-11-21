@@ -8,9 +8,16 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     private ConnectionListener connectionListener;
 
     private IChimpDevice device;
+    private AdbBackend adbBackend;
 
     @Override
     public void sendEventToDevice(int eventType, KeyAction keyAction) {
+        if (!isAlive()) {
+            disconnect();
+            connect();
+            return;
+        }
+
         switch (keyAction) {
             case UP:
                 device.press(String.valueOf(eventType), TouchPressType.UP);
@@ -19,10 +26,20 @@ public class MonkeyDeviceConnection implements DeviceConnection {
                 device.press(String.valueOf(eventType), TouchPressType.DOWN);
                 break;
         }
+        if (!isAlive()) {
+            disconnect();
+            connect();
+        }
     }
 
     @Override
     public void sendTextToDevice(String text, KeyAction keyAction) {
+        if (!isAlive()) {
+            disconnect();
+            connect();
+            return;
+        }
+
         switch (keyAction) {
             case UP:
                 device.press(text, TouchPressType.UP);
@@ -31,6 +48,11 @@ public class MonkeyDeviceConnection implements DeviceConnection {
                 device.press(text, TouchPressType.DOWN);
                 break;
         }
+        if (!isAlive()) {
+            disconnect();
+            connect();
+        }
+
     }
 
     @Override
@@ -41,8 +63,14 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     @Override
     public void connect() {
         try {
+            if (adbBackend != null) {
+                adbBackend.shutdown();
+                adbBackend = null;
+            }
+
             // sdk/platform-tools has to be in PATH env variable in order to find adb
-            device = new AdbBackend().waitForConnection();
+            adbBackend = new AdbBackend();
+            device = adbBackend.waitForConnection(3000, ".*");
 
             // Print Device Name
             System.out.println("Connected to: " + device.getProperty("build.model"));
@@ -57,6 +85,12 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     @Override
     public void disconnect() {
         connectionListener.onConnectionLost();
-        device.dispose();
+        if (device != null) {
+            device.dispose();
+        }
+    }
+
+    public boolean isAlive() {
+        return device != null && device.getPropertyList() != null;
     }
 }
