@@ -1,6 +1,6 @@
 # Adb Key Monkey
 
-*Fastest Abd Keyboard*
+*Fastest Adb Keyboard*
 
 Tool for control android device via PC keyboard
 
