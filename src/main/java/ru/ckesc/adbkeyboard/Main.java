@@ -3,13 +3,17 @@ package ru.ckesc.adbkeyboard;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import ru.ckesc.adbkeyboard.connection.*;
+import ru.ckesc.adbkeyboard.connection.ConnectionListener;
+import ru.ckesc.adbkeyboard.connection.DeviceConnection;
+import ru.ckesc.adbkeyboard.connection.KeyAction;
+import ru.ckesc.adbkeyboard.connection.MonkeyDeviceConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +22,7 @@ public class Main extends Application implements ConnectionListener {
 
     private Map<KeyCode, Integer> adbEventMap = new HashMap<>();
     private Scene scene;
+    private Label status;
 
     public static void main(String[] args) {
         launch(args);
@@ -42,14 +47,18 @@ public class Main extends Application implements ConnectionListener {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        StackPane stackPane = new StackPane();
+        status = new Label();
+        stackPane.getChildren().add(status);
+        scene = new Scene(stackPane,600,400);
 
-        scene = new Scene(new Group());
         primaryStage.setScene(scene);
         primaryStage.setTitle("Adb Key Monkey!");
         primaryStage.show();
 
         initMap();
         scene.setFill(Color.WHEAT);
+        status.setText("Connecting...");
         scene.setOnKeyPressed(new KeyDownEventHandler());
         scene.setOnKeyReleased(new KeyUpEventHandler());
 
@@ -73,12 +82,14 @@ public class Main extends Application implements ConnectionListener {
 
     @Override
     public void onConnectionLost() {
+        status.setText("Disconnected");
         scene.setFill(Color.DARKRED);
     }
 
     @Override
     public void onConnectionOk() {
         scene.setFill(Color.WHITE);
+        status.setText("Connected!");
     }
 
     private class KeyDownEventHandler implements EventHandler<KeyEvent> {
