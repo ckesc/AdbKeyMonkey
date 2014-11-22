@@ -14,7 +14,7 @@ Tool for control android device via PC keyboard
 Speed of operation is achieved through the use of [MonkeyRunner API] (http://developer.android.com/tools/help/monkeyrunner_concepts.html)
 
 ### Requirement:
-Java 7 runtime *(JRE7)*
+Java 7 runtime *(JRE7)* or higher
 
 ### How to run
 1. Run: `java -jar adbKeyMonkey.jar`
