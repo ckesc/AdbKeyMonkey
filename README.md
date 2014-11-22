@@ -1,3 +1,6 @@
+<p align="center">  
+    <img height="250" src="https://raw.githubusercontent.com/ckesc/AdbKeyMonkey/master/logo.png">  
+</p>
 # Adb Key Monkey [![Build Status](https://travis-ci.org/ckesc/AdbKeyMonkey.svg?branch=master)](https://travis-ci.org/ckesc/AdbKeyMonkey)
 
 *Fastest Adb Keyboard*
