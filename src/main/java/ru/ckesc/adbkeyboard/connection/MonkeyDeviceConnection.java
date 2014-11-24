@@ -86,7 +86,12 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     public void disconnect() {
         connectionListener.onConnectionLost();
         if (device != null) {
-            device.dispose();
+			try {
+                adbBackend.shutdown();
+                adbBackend = null;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         }
     }
 
