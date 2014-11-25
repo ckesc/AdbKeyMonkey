@@ -72,27 +72,34 @@ public class MonkeyDeviceConnection implements DeviceConnection {
             adbBackend = new AdbBackend();
             device = adbBackend.waitForConnection(3000, ".*");
 
+            if (device == null) {
+                disconnect();
+                return;
+            }
+
             // Print Device Name
             System.out.println("Connected to: " + device.getProperty("build.model"));
 
             connectionListener.onConnectionOk();
         } catch (Exception e) {
-            connectionListener.onConnectionLost();
             e.printStackTrace();
+            disconnect();
         }
     }
 
     @Override
     public void disconnect() {
         connectionListener.onConnectionLost();
-        if (device != null) {
-			try {
+        if (adbBackend != null) {
+            try {
+                System.out.println("Shutting down adb");
                 adbBackend.shutdown();
                 adbBackend = null;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        System.out.println("Disconnected");
     }
 
     public boolean isAlive() {
