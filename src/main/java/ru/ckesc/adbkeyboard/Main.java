@@ -40,7 +40,7 @@ public class Main extends Application implements ConnectionListener {
         adbEventMap.put(KeyCode.DOWN, 20);
         adbEventMap.put(KeyCode.LEFT, 21);
         adbEventMap.put(KeyCode.RIGHT, 22);
-        adbEventMap.put(KeyCode.ENTER, 66);
+        adbEventMap.put(KeyCode.ENTER, 23);
         adbEventMap.put(KeyCode.ESCAPE, 4);
         adbEventMap.put(KeyCode.BACK_SPACE, 67);
     }
