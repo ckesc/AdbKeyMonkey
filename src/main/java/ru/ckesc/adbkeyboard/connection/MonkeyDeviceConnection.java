@@ -62,10 +62,10 @@ public class MonkeyDeviceConnection implements DeviceConnection {
 
     @Override
     public void connect() {
+        log("Connecting...");
         try {
             if (adbBackend != null) {
-                adbBackend.shutdown();
-                adbBackend = null;
+                disconnect();
             }
 
             // sdk/platform-tools has to be in PATH env variable in order to find adb
@@ -73,12 +73,13 @@ public class MonkeyDeviceConnection implements DeviceConnection {
             device = adbBackend.waitForConnection(3000, ".*");
 
             if (device == null) {
+                log("Can`t connect. Disconnecting.");
                 disconnect();
                 return;
             }
 
             // Print Device Name
-            System.out.println("Connected to: " + device.getProperty("build.model"));
+            log("Connected to: " + device.getProperty("build.model"));
 
             connectionListener.onConnectionOk();
         } catch (Exception e) {
@@ -92,17 +93,21 @@ public class MonkeyDeviceConnection implements DeviceConnection {
         connectionListener.onConnectionLost();
         if (adbBackend != null) {
             try {
-                System.out.println("Shutting down adb");
+                log("Disconnecting: Shutting down adb...");
                 adbBackend.shutdown();
                 adbBackend = null;
+                log("Disconnected.");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("Disconnected");
     }
 
     public boolean isAlive() {
         return device != null && device.getPropertyList() != null;
+    }
+
+    private void log(String logLine) {
+        System.out.println(logLine);
     }
 }
