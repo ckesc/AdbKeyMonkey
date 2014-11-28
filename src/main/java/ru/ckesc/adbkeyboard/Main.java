@@ -17,10 +17,13 @@ import ru.ckesc.adbkeyboard.connection.MonkeyDeviceConnection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main extends Application implements ConnectionListener {
 
     private Map<KeyCode, Integer> adbEventMap = new HashMap<>();
+    private ExecutorService executor;
     private Scene scene;
     private Label status;
 
@@ -47,6 +50,27 @@ public class Main extends Application implements ConnectionListener {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        executor = Executors.newFixedThreadPool(1);
+        initUI(primaryStage);
+        initMap();
+
+        showState(ViewState.Connecting);
+        scene.setOnKeyPressed(new KeyDownEventHandler());
+        scene.setOnKeyReleased(new KeyUpEventHandler());
+
+//        deviceConnection = new ShellDeviceConnection();
+        deviceConnection = new MonkeyDeviceConnection();
+        deviceConnection.setConnectionListener(this);
+
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                deviceConnection.connect();
+            }
+        });
+    }
+
+    private void initUI(Stage primaryStage) {
         StackPane stackPane = new StackPane();
         status = new Label();
         stackPane.getChildren().add(status);
@@ -55,62 +79,97 @@ public class Main extends Application implements ConnectionListener {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Adb Key Monkey!");
         primaryStage.show();
-
-        initMap();
-        scene.setFill(Color.WHEAT);
-        status.setText("Connecting...");
-        scene.setOnKeyPressed(new KeyDownEventHandler());
-        scene.setOnKeyReleased(new KeyUpEventHandler());
-
-//        deviceConnection = new ShellDeviceConnection();
-        deviceConnection = new MonkeyDeviceConnection();
-        deviceConnection.setConnectionListener(this);
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                deviceConnection.connect();
-            }
-        });
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
-        deviceConnection.disconnect();
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                deviceConnection.disconnect();
+            }
+        });
+        executor.shutdown();
     }
 
     @Override
     public void onConnectionLost() {
-        status.setText("Disconnected");
-        scene.setFill(Color.DARKRED);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                showState(ViewState.Disconnected);
+            }
+        });
     }
 
     @Override
     public void onConnectionOk() {
-        scene.setFill(Color.WHITE);
-        status.setText("Connected!");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                showState(ViewState.Connected);
+            }
+        });
     }
 
     private class KeyDownEventHandler implements EventHandler<KeyEvent> {
         @Override
-        public void handle(KeyEvent keyEvent) {
-            if (adbEventMap.containsKey(keyEvent.getCode())) {
-                deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.DOWN);
-            } else {
-                deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.DOWN);
-            }
+        public void handle(final KeyEvent keyEvent) {
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    if (adbEventMap.containsKey(keyEvent.getCode())) {
+                        deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.DOWN);
+                    } else {
+                        deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.DOWN);
+                    }
+                }
+            });
         }
     }
 
     private class KeyUpEventHandler implements EventHandler<KeyEvent> {
         @Override
-        public void handle(KeyEvent keyEvent) {
-            if (adbEventMap.containsKey(keyEvent.getCode())) {
-                deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.UP);
-            } else {
-                deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.UP);
-            }
+        public void handle(final KeyEvent keyEvent) {
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    if (adbEventMap.containsKey(keyEvent.getCode())) {
+                        deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.UP);
+                    } else {
+                        deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.UP);
+                    }
+                }
+            });
         }
     }
+
+    private void showState(ViewState viewState) {
+        switch (viewState) {
+            case Init:
+                break;
+            case Connecting:
+                scene.setFill(Color.WHEAT);
+                status.setText("Connecting...");
+                break;
+            case Connected:
+                scene.setFill(Color.WHITE);
+                status.setText("Connected!");
+                break;
+            case Disconnected:
+                status.setText("Disconnected");
+                scene.setFill(Color.DARKRED);
+                break;
+        }
+    }
+
+    private enum ViewState {
+        Init,
+        Connecting,
+        Connected,
+        Disconnected
+    }
+
+
 }
