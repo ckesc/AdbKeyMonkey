@@ -16,6 +16,7 @@ public class ShellDeviceConnection implements DeviceConnection {
 
 
     private void restartStd() {
+        connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Connecting);
         try {
             if (adbStdIn != null) {
                 adbShellProcess.destroy();
@@ -82,7 +83,7 @@ public class ShellDeviceConnection implements DeviceConnection {
 
     @Override
     public void disconnect() {
-        connectionListener.onConnectionLost();
+        connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Disconnected);
         try {
             adbStdIn.close();
         } catch (IOException e) {
@@ -120,7 +121,7 @@ public class ShellDeviceConnection implements DeviceConnection {
             } catch (IOException e) {
                 setConnected(false);
                 e.printStackTrace();
-                connectionListener.onConnectionLost();
+                connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Disconnected);
                 restartStd();
             }
         }
@@ -140,9 +141,9 @@ public class ShellDeviceConnection implements DeviceConnection {
         this.isConnected = isConnected;
         if (connectionListener != null) {
             if (isConnected) {
-                connectionListener.onConnectionOk();
+                connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Connected);
             } else {
-                connectionListener.onConnectionLost();
+                connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Disconnected);
             }
         }
     }

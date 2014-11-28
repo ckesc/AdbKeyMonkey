@@ -63,6 +63,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     @Override
     public void connect() {
         log("Connecting...");
+        connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Connecting);
         try {
             if (adbBackend != null) {
                 disconnect();
@@ -81,7 +82,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
             // Print Device Name
             log("Connected to: " + device.getProperty("build.model"));
 
-            connectionListener.onConnectionOk();
+            connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Connected);
         } catch (Exception e) {
             e.printStackTrace();
             disconnect();
@@ -90,7 +91,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
 
     @Override
     public void disconnect() {
-        connectionListener.onConnectionLost();
+        connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Disconnected);
         if (adbBackend != null) {
             try {
                 log("Disconnecting: Shutting down adb...");

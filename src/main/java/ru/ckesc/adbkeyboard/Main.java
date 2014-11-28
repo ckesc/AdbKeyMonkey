@@ -69,14 +69,16 @@ public class Main extends Application implements ConnectionListener {
         initUI(primaryStage);
         initMap();
 
-        showState(ViewState.Connecting);
+        showState(ViewState.Init);
         scene.setOnKeyPressed(new KeyDownEventHandler());
         scene.setOnKeyReleased(new KeyUpEventHandler());
+
+        isFocused = primaryStage.isFocused();
         primaryStage.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean focused) {
                 isFocused = focused;
-                showState(currentState); //update showing state
+                showState(currentState); //update current state with focused value
             }
         });
 
@@ -117,21 +119,24 @@ public class Main extends Application implements ConnectionListener {
     }
 
     @Override
-    public void onConnectionLost() {
+    public void onConnectionStatusChanged(ConnectionStatus newConnectionStatus) {
+        ViewState viewState = ViewState.Init;
+        switch (newConnectionStatus) {
+            case Disconnected:
+                viewState = ViewState.Disconnected;
+                break;
+            case Connecting:
+                viewState = ViewState.Connecting;
+                break;
+            case Connected:
+                viewState = ViewState.Connected;
+                break;
+        }
+        final ViewState finalViewState = viewState;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                showState(ViewState.Disconnected);
-            }
-        });
-    }
-
-    @Override
-    public void onConnectionOk() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                showState(ViewState.Connected);
+                showState(finalViewState);
             }
         });
     }
