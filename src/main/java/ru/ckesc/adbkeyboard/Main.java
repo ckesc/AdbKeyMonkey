@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 
 public class Main extends Application implements ConnectionListener {
 
+    private Stage stage;
     private Map<KeyCode, Integer> adbEventMap = new HashMap<>();
     private ExecutorService executor;
     private Scene scene;
@@ -40,7 +41,6 @@ public class Main extends Application implements ConnectionListener {
     private final static Color green300 = Color.web("#81C784");
 
     private ViewState currentState;
-    private boolean isFocused = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -73,11 +73,9 @@ public class Main extends Application implements ConnectionListener {
         scene.setOnKeyPressed(new KeyDownEventHandler());
         scene.setOnKeyReleased(new KeyUpEventHandler());
 
-        isFocused = primaryStage.isFocused();
         primaryStage.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean focused) {
-                isFocused = focused;
                 showState(currentState); //update current state with focused value
             }
         });
@@ -104,6 +102,8 @@ public class Main extends Application implements ConnectionListener {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Adb Key Monkey!");
         primaryStage.show();
+
+        stage = primaryStage;
     }
 
     @Override
@@ -139,6 +139,10 @@ public class Main extends Application implements ConnectionListener {
                 showState(finalViewState);
             }
         });
+    }
+
+    public boolean isFocused() {
+        return stage.isFocused();
     }
 
     private class KeyDownEventHandler implements EventHandler<KeyEvent> {
@@ -181,14 +185,14 @@ public class Main extends Application implements ConnectionListener {
                 break;
             case Connecting:
                 status.setText("Connecting...");
-                if (isFocused) {
+                if (isFocused()) {
                     scene.setFill(lime300);
                 } else {
                     scene.setFill(lime200);
                 }
                 break;
             case Connected:
-                if (isFocused) {
+                if (isFocused()) {
                     status.setText("Connected!");
                     scene.setFill(green300);
                 } else {
@@ -199,7 +203,7 @@ public class Main extends Application implements ConnectionListener {
                 break;
             case Disconnected:
                 status.setText("Disconnected");
-                if (isFocused) {
+                if (isFocused()) {
                     scene.setFill(red300);
                 } else {
                     scene.setFill(red200);
