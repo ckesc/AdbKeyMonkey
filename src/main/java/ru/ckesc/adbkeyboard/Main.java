@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -102,6 +103,8 @@ public class Main extends Application implements ConnectionListener {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Adb Key Monkey!");
         primaryStage.show();
+
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
 
         stage = primaryStage;
     }
