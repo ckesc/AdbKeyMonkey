@@ -10,8 +10,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import ru.ckesc.adbkeyboard.connection.ConnectionListener;
 import ru.ckesc.adbkeyboard.connection.KeyAction;
@@ -28,13 +26,13 @@ public class Controller implements ConnectionListener {
     private ExecutorService executor;
 
     //Colors from material design http://www.google.com/design/spec/style/color.html#color-color-palette
-    private final static Color gray50 = Color.web("#FAFAFA");
-    private final static Color red200 = Color.web("#EF9A9A");
-    private final static Color red300 = Color.web("#E57373");
-    private final static Color lime200 = Color.web("#E6EE9C");
-    private final static Color lime300 = Color.web("#DCE775");
-    private final static Color green100 = Color.web("#C8E6C9");
-    private final static Color green300 = Color.web("#81C784");
+    private final static String COLOR_INIT = "#FAFAFA";
+    private final static String COLOR_DISCONNECTED_UNFOCUSED = "#E57373";
+    private final static String COLOR_DISCONNECTED_FOCUSED = "#F44336";
+    private final static String COLOR_CONNECTING_UNFOCUSED = "#BDBDBD";
+    private final static String COLOR_CONNECTING_FOCUSED = "#9E9E9E";
+    private final static String COLOR_CONNECTED_UNFOCUSED = "#81C784";
+    private final static String COLOR_CONNECTED_FOCUSED = "#4CAF50";
 
     private ViewState currentState;
 
@@ -43,6 +41,7 @@ public class Controller implements ConnectionListener {
     public TextArea logArea;
     public Label statusLabel;
     public AnchorPane mainPane;
+    public AnchorPane topBar;
 
     private MonkeyDeviceConnection deviceConnection;
 
@@ -60,7 +59,7 @@ public class Controller implements ConnectionListener {
         mainPane.addEventFilter(KeyEvent.KEY_PRESSED, new KeyDownEventHandler());
         mainPane.addEventFilter(KeyEvent.KEY_RELEASED, new KeyUpEventHandler());
 
-        mainPane.focusedProperty().addListener(new ChangeListener<Boolean>() {
+        stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean focused) {
                 showState(currentState); //update current state with focused value
@@ -127,7 +126,7 @@ public class Controller implements ConnectionListener {
     }
 
     public boolean isFocused() {
-        return stage.isFocused();
+        return stage != null && stage.isFocused();
     }
 
     private class KeyDownEventHandler implements EventHandler<KeyEvent> {
@@ -169,40 +168,40 @@ public class Controller implements ConnectionListener {
         switch (viewState) {
             case Init:
                 statusLabel.setText("Init...");
-                changeBgColor(gray50);
+                changeBgColor(COLOR_INIT);
                 break;
             case Connecting:
                 statusLabel.setText("Connecting...");
                 if (isFocused()) {
-                    changeBgColor(lime300);
+                    changeBgColor(COLOR_CONNECTING_FOCUSED);
                 } else {
-                    changeBgColor(lime200);
+                    changeBgColor(COLOR_CONNECTING_UNFOCUSED);
                 }
                 break;
             case Connected:
                 if (isFocused()) {
                     statusLabel.setText("Connected!");
-                    changeBgColor(green300);
+                    changeBgColor(COLOR_CONNECTED_FOCUSED);
                 } else {
-                    statusLabel.setText("Connected!\nNot focused");
-                    changeBgColor(green100);
+                    statusLabel.setText("Connected! Not focused");
+                    changeBgColor(COLOR_CONNECTED_UNFOCUSED);
                 }
 
                 break;
             case Disconnected:
                 statusLabel.setText("Disconnected");
                 if (isFocused()) {
-                    changeBgColor(red300);
+                    changeBgColor(COLOR_DISCONNECTED_FOCUSED);
                 } else {
-                    changeBgColor(red200);
+                    changeBgColor(COLOR_DISCONNECTED_UNFOCUSED);
                 }
                 break;
         }
         currentState = viewState;
     }
 
-    private void changeBgColor(Paint paint) {
-
+    private void changeBgColor(String color) {
+        topBar.styleProperty().set("-fx-background-color:" + color);
     }
 
 
