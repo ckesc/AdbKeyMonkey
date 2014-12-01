@@ -57,8 +57,8 @@ public class Controller implements ConnectionListener {
         initMap();
 
         showState(ViewState.Init);
-        mainPane.setOnKeyPressed(new KeyDownEventHandler());
-        mainPane.setOnKeyReleased(new KeyUpEventHandler());
+        mainPane.addEventFilter(KeyEvent.KEY_PRESSED, new KeyDownEventHandler());
+        mainPane.addEventFilter(KeyEvent.KEY_RELEASED, new KeyUpEventHandler());
 
         mainPane.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -143,6 +143,7 @@ public class Controller implements ConnectionListener {
                     }
                 }
             });
+            keyEvent.consume();
         }
     }
 
@@ -159,6 +160,7 @@ public class Controller implements ConnectionListener {
                     }
                 }
             });
+            keyEvent.consume();
         }
     }
 
