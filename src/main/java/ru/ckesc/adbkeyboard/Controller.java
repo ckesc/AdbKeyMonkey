@@ -18,7 +18,10 @@ import ru.ckesc.adbkeyboard.connection.ConnectionListener;
 import ru.ckesc.adbkeyboard.connection.KeyAction;
 import ru.ckesc.adbkeyboard.connection.MonkeyDeviceConnection;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,7 +58,7 @@ public class Controller implements ConnectionListener {
         executor = Executors.newFixedThreadPool(1);
 
         //        deviceConnection = new ShellDeviceConnection();
-        deviceConnection = new MonkeyDeviceConnection();
+        deviceConnection = new MonkeyDeviceConnection(new FxLogger());
 
         initMap();
 
@@ -243,6 +246,39 @@ public class Controller implements ConnectionListener {
         Connecting,
         Connected,
         Disconnected
+    }
+
+    private class FxLogger implements Logger {
+
+        private void log(String message) {
+            StringBuilder stringBuilder = new StringBuilder()
+                    .append("[")
+                    .append(DateFormat.getTimeInstance(DateFormat.DEFAULT, Locale.getDefault()).format(new Date()))
+                    .append("] ")
+                    .append(message)
+                    .append("\n");
+            logArea.appendText(stringBuilder.toString());
+        }
+
+        @Override
+        public void info(final String message) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    log(message);
+                }
+            });
+        }
+
+        @Override
+        public void error(final String message) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    log(message);
+                }
+            });
+        }
     }
 
 

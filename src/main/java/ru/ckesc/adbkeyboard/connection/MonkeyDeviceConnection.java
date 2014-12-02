@@ -3,12 +3,18 @@ package ru.ckesc.adbkeyboard.connection;
 import com.android.chimpchat.adb.AdbBackend;
 import com.android.chimpchat.core.IChimpDevice;
 import com.android.chimpchat.core.TouchPressType;
+import ru.ckesc.adbkeyboard.Logger;
 
 public class MonkeyDeviceConnection implements DeviceConnection {
     private ConnectionListener connectionListener;
 
     private IChimpDevice device;
     private AdbBackend adbBackend;
+    private Logger logger;
+
+    public MonkeyDeviceConnection(Logger logger) {
+        this.logger = logger;
+    }
 
     @Override
     public void sendEventToDevice(int eventType, KeyAction keyAction) {
@@ -18,12 +24,15 @@ public class MonkeyDeviceConnection implements DeviceConnection {
             return;
         }
 
+        String keyCode = String.valueOf(eventType);
         switch (keyAction) {
             case UP:
-                device.press(String.valueOf(eventType), TouchPressType.UP);
+//                log("Key up  : "+keyCode);
+                device.press(keyCode, TouchPressType.UP);
                 break;
             case DOWN:
-                device.press(String.valueOf(eventType), TouchPressType.DOWN);
+//                log("Key down: "+keyCode);
+                device.press(keyCode, TouchPressType.DOWN);
                 break;
         }
         if (!isAlive()) {
@@ -110,5 +119,6 @@ public class MonkeyDeviceConnection implements DeviceConnection {
 
     private void log(String logLine) {
         System.out.println(logLine);
+        logger.info(logLine);
     }
 }

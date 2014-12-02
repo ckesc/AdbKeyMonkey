@@ -8,29 +8,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E0E0E0;"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ru.ckesc.adbkeyboard.Controller">
-    <TextArea fx:id="logArea" editable="false" layoutX="14.0" layoutY="59.0" prefHeight="200.0" prefWidth="200.0"
-              style="-fx-focus-color: transparent;" wrapText="true" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="48.0"/>
-    <AnchorPane fx:id="topBar" prefHeight="48.0" prefWidth="48.0" style="-fx-background-color: #4CAF50;"
-                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Rectangle fx:id="rectBg" fill="TRANSPARENT" height="40.0" smooth="false" stroke="TRANSPARENT"
-                   strokeType="INSIDE" strokeWidth="0.0" width="620.0"/>
-        <Label fx:id="statusLabel" text="Init ..." textFill="WHITE" AnchorPane.bottomAnchor="0.0"
-               AnchorPane.leftAnchor="72.0" AnchorPane.topAnchor="0.0">
-            <font>
-                <Font size="25.0"/>
-            </font>
-        </Label>
-        <ImageView fitHeight="48.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"
-                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="4.0">
-            <Image url="@icon.png"/>
-        </ImageView>
-        <effect>
-            <DropShadow/>
-        </effect>
-    </AnchorPane>
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E0E0E0;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.ckesc.adbkeyboard.Controller">
+   <children>
+       <TextArea fx:id="logArea" editable="false" layoutX="14.0" layoutY="59.0" prefHeight="200.0" prefWidth="200.0" style="-fx-focus-color: transparent; -fx-font-family: Courier New; -fx-font-size: 16;" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="48.0">
+      </TextArea>
+       <AnchorPane fx:id="topBar" prefHeight="48.0" prefWidth="48.0" style="-fx-background-color: #4CAF50;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <children>
+              <Rectangle fx:id="rectBg" fill="TRANSPARENT" height="40.0" smooth="false" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="620.0" />
+              <Label fx:id="statusLabel" text="Init ..." textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="72.0" AnchorPane.topAnchor="0.0">
+                  <font>
+                      <Font size="25.0" />
+                  </font>
+              </Label>
+              <ImageView fitHeight="48.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="4.0">
+                 <image>
+                     <Image url="@icon.png" />
+                 </image>
+              </ImageView>
+          </children>
+           <effect>
+               <DropShadow />
+           </effect>
+       </AnchorPane>
+   </children>
 </AnchorPane>
