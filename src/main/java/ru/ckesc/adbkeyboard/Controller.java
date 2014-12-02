@@ -1,5 +1,6 @@
 package ru.ckesc.adbkeyboard;
 
+import javafx.animation.FillTransitionBuilder;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,6 +11,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import ru.ckesc.adbkeyboard.connection.ConnectionListener;
 import ru.ckesc.adbkeyboard.connection.KeyAction;
@@ -26,7 +29,7 @@ public class Controller implements ConnectionListener {
     private ExecutorService executor;
 
     //Colors from material design http://www.google.com/design/spec/style/color.html#color-color-palette
-    private final static String COLOR_INIT = "#FAFAFA";
+    private final static String COLOR_INIT = "#BDBDBD";
     private final static String COLOR_DISCONNECTED_UNFOCUSED = "#E57373";
     private final static String COLOR_DISCONNECTED_FOCUSED = "#F44336";
     private final static String COLOR_CONNECTING_UNFOCUSED = "#BDBDBD";
@@ -42,6 +45,7 @@ public class Controller implements ConnectionListener {
     public Label statusLabel;
     public AnchorPane mainPane;
     public AnchorPane topBar;
+    public Rectangle rectBg;
 
     private MonkeyDeviceConnection deviceConnection;
 
@@ -55,7 +59,6 @@ public class Controller implements ConnectionListener {
 
         initMap();
 
-        showState(ViewState.Init);
         mainPane.addEventFilter(KeyEvent.KEY_PRESSED, new KeyDownEventHandler());
         mainPane.addEventFilter(KeyEvent.KEY_RELEASED, new KeyUpEventHandler());
 
@@ -67,6 +70,13 @@ public class Controller implements ConnectionListener {
         });
 
         deviceConnection.setConnectionListener(this);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                showState(ViewState.Init);
+            }
+        });
 
         executor.submit(new Runnable() {
             @Override
@@ -168,40 +178,63 @@ public class Controller implements ConnectionListener {
         switch (viewState) {
             case Init:
                 statusLabel.setText("Init...");
-                changeBgColor(COLOR_INIT);
+                changeBgColor(COLOR_INIT, false);
                 break;
             case Connecting:
                 statusLabel.setText("Connecting...");
                 if (isFocused()) {
-                    changeBgColor(COLOR_CONNECTING_FOCUSED);
+                    changeBgColor(COLOR_CONNECTING_FOCUSED, true);
                 } else {
-                    changeBgColor(COLOR_CONNECTING_UNFOCUSED);
+                    changeBgColor(COLOR_CONNECTING_UNFOCUSED, true);
                 }
                 break;
             case Connected:
                 if (isFocused()) {
                     statusLabel.setText("Connected!");
-                    changeBgColor(COLOR_CONNECTED_FOCUSED);
+                    changeBgColor(COLOR_CONNECTED_FOCUSED, true);
                 } else {
                     statusLabel.setText("Connected! Not focused");
-                    changeBgColor(COLOR_CONNECTED_UNFOCUSED);
+                    changeBgColor(COLOR_CONNECTED_UNFOCUSED, true);
                 }
 
                 break;
             case Disconnected:
                 statusLabel.setText("Disconnected");
                 if (isFocused()) {
-                    changeBgColor(COLOR_DISCONNECTED_FOCUSED);
+                    changeBgColor(COLOR_DISCONNECTED_FOCUSED, true);
                 } else {
-                    changeBgColor(COLOR_DISCONNECTED_UNFOCUSED);
+                    changeBgColor(COLOR_DISCONNECTED_UNFOCUSED, true);
                 }
                 break;
         }
         currentState = viewState;
     }
 
-    private void changeBgColor(String color) {
+    /**
+     * Change color of top bar
+     * @param color new color in web format (example @code{#aa0011})
+     * @param useAnimation use or not animation
+     */
+    private void changeBgColor(String color, boolean useAnimation) {
+        if (!useAnimation) {
+            topBar.styleProperty().set("-fx-background-color:" + color);
+            rectBg.setFill(Color.web(color));
+            return;
+        }
+
+        //Fix rect size (in case windows been resized)
+        rectBg.setWidth(topBar.getWidth());
+        rectBg.setHeight(topBar.getHeight());
+
+        //Filling end bar with end color
         topBar.styleProperty().set("-fx-background-color:" + color);
+
+        //Run transition
+        FillTransitionBuilder.create()
+                .fromValue((Color) rectBg.getFill())
+                .toValue(Color.web(color))
+                .shape(rectBg)
+                .build().play();
     }
 
 
