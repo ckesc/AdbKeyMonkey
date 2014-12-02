@@ -10,7 +10,8 @@
 Tool for control android device via PC keyboard
 
 ## Requirement:
-Java 7 runtime *(JRE7)* or higher
+* Java 7 runtime *(JRE7)* or higher
+* Sdk/platform-tools has to be in PATH env variable in order to find adb
 
 ## How to run
 1. [Download](https://github.com/ckesc/AdbKeyMonkey/releases)
