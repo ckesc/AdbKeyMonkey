@@ -36,7 +36,7 @@ So before run, connect your device via ADB. Execute `adb devices` to verify.
 ## How it`s works
 Speed of operation is achieved through the use of [MonkeyRunner API] (http://developer.android.com/tools/help/monkeyrunner_concepts.html)
 
-[See it in action (gif)](http://habrastorage.org/files/bf6/bb5/1f6/bf6bb51f6b5d4f2c9ea33caa49bc3060.gif)
+[See it in action](http://recordit.co/0vtYFKl1Qb)
 
 ![screenshot](http://habrastorage.org/files/850/9d9/3d6/8509d93d6025478f80bfc85e03ae185e.PNG)
 
