@@ -93,7 +93,7 @@ public class Controller implements ConnectionListener {
         });
 
         //Check connectivity every 5 sec
-        logger.info("Checking connectivity every 5 sec");
+        logger.info("Checking connectivity every "+config.getReconnectPeriod()+" sec");
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -106,7 +106,7 @@ public class Controller implements ConnectionListener {
                     }
                 }
             }
-        }, 5, 5, TimeUnit.SECONDS);
+        }, config.getReconnectPeriod(), config.getReconnectPeriod(), TimeUnit.SECONDS);
 
     }
 

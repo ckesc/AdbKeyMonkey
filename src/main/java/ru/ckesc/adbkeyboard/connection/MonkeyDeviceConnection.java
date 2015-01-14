@@ -26,11 +26,11 @@ public class MonkeyDeviceConnection implements DeviceConnection {
 
         switch (keyAction) {
             case UP:
-//                log("Key up  : "+keyCode);
+                log("Key up:\t\t "+keyCode);
                 device.press(keyCode, TouchPressType.UP);
                 break;
             case DOWN:
-//                log("Key down: "+keyCode);
+                log("Key down:\t "+keyCode);
                 device.press(keyCode, TouchPressType.DOWN);
                 break;
         }

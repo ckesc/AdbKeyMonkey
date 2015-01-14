@@ -1,5 +1,7 @@
 package ru.ckesc.adbkeyboard;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,7 +11,10 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import ru.ckesc.adbkeyboard.config.Config;
 
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 public class Main extends Application {
 
@@ -30,10 +35,42 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
         primaryStage.show();
 
-        Config defaultConfig = createDefaultConfig();
+        Config config = loadConfig();
 
         controller = loader.getController();
-        controller.init(primaryStage, defaultConfig);
+        controller.init(primaryStage, config);
+    }
+
+    public static Config loadConfig() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        File file = new File("config.json");
+
+        //Create config on disk if it not exists
+        if (!file.exists()) {
+            Config defaultConfig = createDefaultConfig();
+            String stringConfig = gson.toJson(defaultConfig);
+            try {
+                PrintWriter printWriter = new PrintWriter(file, "UTF-8");
+                printWriter.write(stringConfig);
+                printWriter.close();
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return defaultConfig;
+        }
+
+        //Read config. Fallback to default
+        try {
+            BufferedReader reader = Files.newBufferedReader(file.toPath(), Charset.forName("UTF-8"));
+            Config config = gson.fromJson(reader, Config.class);
+            reader.close();
+            return config;
+        } catch (Exception e) {
+            System.out.println("Can`t read config! Fallback to default.");
+            e.printStackTrace();
+            return createDefaultConfig();
+        }
+
     }
 
     public static Config createDefaultConfig() {
@@ -46,6 +83,8 @@ public class Main extends Application {
                 .addKeyMapItem(KeyCode.ENTER, "KEYCODE_DPAD_CENTER")
                 .addKeyMapItem(KeyCode.ESCAPE, "KEYCODE_BACK")
                 .addKeyMapItem(KeyCode.BACK_SPACE, "KEYCODE_DEL")
+                .addKeyMapItem(KeyCode.HOME, "KEYCODE_HOME")
+                .addKeyMapItem(KeyCode.END, "KEYCODE_NOTIFICATION")
 
                 .addKeyMapItem(KeyCode.DIGIT0, "KEYCODE_0")
                 .addKeyMapItem(KeyCode.DIGIT1, "KEYCODE_1")
