@@ -123,6 +123,29 @@ public class Controller implements ConnectionListener {
         adbEventMap.put(KeyCode.ENTER, 23);
         adbEventMap.put(KeyCode.ESCAPE, 4);
         adbEventMap.put(KeyCode.BACK_SPACE, 67);
+        
+        adbEventMap.put(KeyCode.DIGIT0, 7);
+        adbEventMap.put(KeyCode.DIGIT1, 8);
+        adbEventMap.put(KeyCode.DIGIT2, 9);
+        adbEventMap.put(KeyCode.DIGIT3, 10);
+        adbEventMap.put(KeyCode.DIGIT4, 11);
+        adbEventMap.put(KeyCode.DIGIT5, 12);
+        adbEventMap.put(KeyCode.DIGIT6, 13);
+        adbEventMap.put(KeyCode.DIGIT7, 14);
+        adbEventMap.put(KeyCode.DIGIT8, 15);
+        adbEventMap.put(KeyCode.DIGIT9, 16);
+
+        adbEventMap.put(KeyCode.NUMPAD0, 7);
+        adbEventMap.put(KeyCode.NUMPAD1, 8);
+        adbEventMap.put(KeyCode.NUMPAD2, 9);
+        adbEventMap.put(KeyCode.NUMPAD3, 10);
+        adbEventMap.put(KeyCode.NUMPAD4, 11);
+        adbEventMap.put(KeyCode.NUMPAD5, 12);
+        adbEventMap.put(KeyCode.NUMPAD6, 13);
+        adbEventMap.put(KeyCode.NUMPAD7, 14);
+        adbEventMap.put(KeyCode.NUMPAD8, 15);
+        adbEventMap.put(KeyCode.NUMPAD9, 16);
+
     }
 
     public void stop() {
@@ -133,6 +156,7 @@ public class Controller implements ConnectionListener {
             }
         });
         executor.shutdown();
+        scheduledExecutorService.shutdown();
     }
 
     @Override

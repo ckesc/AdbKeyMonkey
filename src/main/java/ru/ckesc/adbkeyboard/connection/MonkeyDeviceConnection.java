@@ -103,7 +103,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
         connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Disconnected);
         if (adbBackend != null) {
             try {
-                log("Disconnecting: Shutting down adb...");
+//                log("Disconnecting: Shutting down adb...");
                 adbBackend.shutdown();
                 adbBackend = null;
                 log("Disconnected.");
