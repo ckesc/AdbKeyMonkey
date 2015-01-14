@@ -17,7 +17,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     }
 
     @Override
-    public void sendEventToDevice(int eventType, KeyAction keyAction) {
+    synchronized public void sendEventToDevice(int eventType, KeyAction keyAction) {
         if (!isAlive()) {
             disconnect();
             connect();
@@ -42,7 +42,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     }
 
     @Override
-    public void sendTextToDevice(String text, KeyAction keyAction) {
+    synchronized public void sendTextToDevice(String text, KeyAction keyAction) {
         if (!isAlive()) {
             disconnect();
             connect();
@@ -70,7 +70,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     }
 
     @Override
-    public void connect() {
+    synchronized public void connect() {
         log("Connecting...");
         connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Connecting);
         try {
@@ -99,7 +99,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     }
 
     @Override
-    public void disconnect() {
+    synchronized public void disconnect() {
         connectionListener.onConnectionStatusChanged(ConnectionListener.ConnectionStatus.Disconnected);
         if (adbBackend != null) {
             try {
@@ -113,7 +113,7 @@ public class MonkeyDeviceConnection implements DeviceConnection {
         }
     }
 
-    public boolean isAlive() {
+    synchronized public boolean isAlive() {
         return device != null && device.getPropertyList() != null;
     }
 

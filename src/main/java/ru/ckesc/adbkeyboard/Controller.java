@@ -25,11 +25,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Controller implements ConnectionListener {
 
+    private Logger logger = new FxLogger(Controller.class.getName());
     private Map<KeyCode, Integer> adbEventMap = new HashMap<>();
     private ExecutorService executor;
+    private ScheduledExecutorService scheduledExecutorService;
 
     //Colors from material design http://www.google.com/design/spec/style/color.html#color-color-palette
     private final static String COLOR_INIT = "#BDBDBD";
@@ -58,7 +62,7 @@ public class Controller implements ConnectionListener {
         executor = Executors.newFixedThreadPool(1);
 
         //        deviceConnection = new ShellDeviceConnection();
-        deviceConnection = new MonkeyDeviceConnection(new FxLogger());
+        deviceConnection = new MonkeyDeviceConnection(new FxLogger(MonkeyDeviceConnection.class.getName()));
 
         initMap();
 
@@ -87,6 +91,22 @@ public class Controller implements ConnectionListener {
                 deviceConnection.connect();
             }
         });
+
+        //Check connectivity every 5 sec
+        logger.info("Checking connectivity every 5 sec");
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (deviceConnection) {
+                    if (!deviceConnection.isAlive()) {
+                        logger.info("Auto reconnect...");
+                        deviceConnection.disconnect();
+                        deviceConnection.connect();
+                    }
+                }
+            }
+        }, 5, 5, TimeUnit.SECONDS);
 
     }
 
@@ -215,7 +235,8 @@ public class Controller implements ConnectionListener {
 
     /**
      * Change color of top bar
-     * @param color new color in web format (example @code{#aa0011})
+     *
+     * @param color        new color in web format (example @code{#aa0011})
      * @param useAnimation use or not animation
      */
     private void changeBgColor(String color, boolean useAnimation) {
@@ -249,6 +270,11 @@ public class Controller implements ConnectionListener {
     }
 
     private class FxLogger implements Logger {
+        private String name;
+
+        private FxLogger(String name) {
+            this.name = name;
+        }
 
         private void log(String message) {
             StringBuilder stringBuilder = new StringBuilder()
