@@ -17,14 +17,13 @@ public class MonkeyDeviceConnection implements DeviceConnection {
     }
 
     @Override
-    synchronized public void sendEventToDevice(int eventType, KeyAction keyAction) {
+    synchronized public void sendEventToDevice(String keyCode, KeyAction keyAction) {
         if (!isAlive()) {
             disconnect();
             connect();
             return;
         }
 
-        String keyCode = String.valueOf(eventType);
         switch (keyAction) {
             case UP:
 //                log("Key up  : "+keyCode);

@@ -8,21 +8,19 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import ru.ckesc.adbkeyboard.config.Config;
 import ru.ckesc.adbkeyboard.connection.ConnectionListener;
 import ru.ckesc.adbkeyboard.connection.KeyAction;
 import ru.ckesc.adbkeyboard.connection.MonkeyDeviceConnection;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,9 +29,10 @@ import java.util.concurrent.TimeUnit;
 public class Controller implements ConnectionListener {
 
     private Logger logger = new FxLogger(Controller.class.getName());
-    private Map<KeyCode, Integer> adbEventMap = new HashMap<>();
+//    private Map<KeyCode, Integer> adbEventMap = new HashMap<>();
     private ExecutorService executor;
     private ScheduledExecutorService scheduledExecutorService;
+    private Config config;
 
     //Colors from material design http://www.google.com/design/spec/style/color.html#color-color-palette
     private final static String COLOR_INIT = "#BDBDBD";
@@ -56,15 +55,16 @@ public class Controller implements ConnectionListener {
 
     private MonkeyDeviceConnection deviceConnection;
 
-    public void init(Stage stage) {
+    public void init(Stage stage, Config config) {
         this.stage = stage;
+        this.config = config;
 
         executor = Executors.newFixedThreadPool(1);
 
         //        deviceConnection = new ShellDeviceConnection();
         deviceConnection = new MonkeyDeviceConnection(new FxLogger(MonkeyDeviceConnection.class.getName()));
 
-        initMap();
+//        initMap();
 
         mainPane.addEventFilter(KeyEvent.KEY_PRESSED, new KeyDownEventHandler());
         mainPane.addEventFilter(KeyEvent.KEY_RELEASED, new KeyUpEventHandler());
@@ -110,43 +110,43 @@ public class Controller implements ConnectionListener {
 
     }
 
-    private void initMap() {
-//        19 -->  "KEYCODE_DPAD_UP"
-//        20 -->  "KEYCODE_DPAD_DOWN"
-//        21 -->  "KEYCODE_DPAD_LEFT"
-//        22 -->  "KEYCODE_DPAD_RIGHT"
-
-        adbEventMap.put(KeyCode.UP, 19);
-        adbEventMap.put(KeyCode.DOWN, 20);
-        adbEventMap.put(KeyCode.LEFT, 21);
-        adbEventMap.put(KeyCode.RIGHT, 22);
-        adbEventMap.put(KeyCode.ENTER, 23);
-        adbEventMap.put(KeyCode.ESCAPE, 4);
-        adbEventMap.put(KeyCode.BACK_SPACE, 67);
-        
-        adbEventMap.put(KeyCode.DIGIT0, 7);
-        adbEventMap.put(KeyCode.DIGIT1, 8);
-        adbEventMap.put(KeyCode.DIGIT2, 9);
-        adbEventMap.put(KeyCode.DIGIT3, 10);
-        adbEventMap.put(KeyCode.DIGIT4, 11);
-        adbEventMap.put(KeyCode.DIGIT5, 12);
-        adbEventMap.put(KeyCode.DIGIT6, 13);
-        adbEventMap.put(KeyCode.DIGIT7, 14);
-        adbEventMap.put(KeyCode.DIGIT8, 15);
-        adbEventMap.put(KeyCode.DIGIT9, 16);
-
-        adbEventMap.put(KeyCode.NUMPAD0, 7);
-        adbEventMap.put(KeyCode.NUMPAD1, 8);
-        adbEventMap.put(KeyCode.NUMPAD2, 9);
-        adbEventMap.put(KeyCode.NUMPAD3, 10);
-        adbEventMap.put(KeyCode.NUMPAD4, 11);
-        adbEventMap.put(KeyCode.NUMPAD5, 12);
-        adbEventMap.put(KeyCode.NUMPAD6, 13);
-        adbEventMap.put(KeyCode.NUMPAD7, 14);
-        adbEventMap.put(KeyCode.NUMPAD8, 15);
-        adbEventMap.put(KeyCode.NUMPAD9, 16);
-
-    }
+//    private void initMap() {
+////        19 -->  "KEYCODE_DPAD_UP"
+////        20 -->  "KEYCODE_DPAD_DOWN"
+////        21 -->  "KEYCODE_DPAD_LEFT"
+////        22 -->  "KEYCODE_DPAD_RIGHT"
+//
+//        adbEventMap.put(KeyCode.UP, 19);
+//        adbEventMap.put(KeyCode.DOWN, 20);
+//        adbEventMap.put(KeyCode.LEFT, 21);
+//        adbEventMap.put(KeyCode.RIGHT, 22);
+//        adbEventMap.put(KeyCode.ENTER, 23);
+//        adbEventMap.put(KeyCode.ESCAPE, 4);
+//        adbEventMap.put(KeyCode.BACK_SPACE, 67);
+//
+//        adbEventMap.put(KeyCode.DIGIT0, 7);
+//        adbEventMap.put(KeyCode.DIGIT1, 8);
+//        adbEventMap.put(KeyCode.DIGIT2, 9);
+//        adbEventMap.put(KeyCode.DIGIT3, 10);
+//        adbEventMap.put(KeyCode.DIGIT4, 11);
+//        adbEventMap.put(KeyCode.DIGIT5, 12);
+//        adbEventMap.put(KeyCode.DIGIT6, 13);
+//        adbEventMap.put(KeyCode.DIGIT7, 14);
+//        adbEventMap.put(KeyCode.DIGIT8, 15);
+//        adbEventMap.put(KeyCode.DIGIT9, 16);
+//
+//        adbEventMap.put(KeyCode.NUMPAD0, 7);
+//        adbEventMap.put(KeyCode.NUMPAD1, 8);
+//        adbEventMap.put(KeyCode.NUMPAD2, 9);
+//        adbEventMap.put(KeyCode.NUMPAD3, 10);
+//        adbEventMap.put(KeyCode.NUMPAD4, 11);
+//        adbEventMap.put(KeyCode.NUMPAD5, 12);
+//        adbEventMap.put(KeyCode.NUMPAD6, 13);
+//        adbEventMap.put(KeyCode.NUMPAD7, 14);
+//        adbEventMap.put(KeyCode.NUMPAD8, 15);
+//        adbEventMap.put(KeyCode.NUMPAD9, 16);
+//
+//    }
 
     public void stop() {
         executor.submit(new Runnable() {
@@ -192,8 +192,8 @@ public class Controller implements ConnectionListener {
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    if (adbEventMap.containsKey(keyEvent.getCode())) {
-                        deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.DOWN);
+                    if (config.getKeyMap().containsKey(keyEvent.getCode())) {
+                        deviceConnection.sendEventToDevice(config.getKeyMap().get(keyEvent.getCode()), KeyAction.DOWN);
                     } else {
                         deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.DOWN);
                     }
@@ -209,8 +209,8 @@ public class Controller implements ConnectionListener {
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    if (adbEventMap.containsKey(keyEvent.getCode())) {
-                        deviceConnection.sendEventToDevice(adbEventMap.get(keyEvent.getCode()), KeyAction.UP);
+                    if (config.getKeyMap().containsKey(keyEvent.getCode())) {
+                        deviceConnection.sendEventToDevice(config.getKeyMap().get(keyEvent.getCode()), KeyAction.UP);
                     } else {
                         deviceConnection.sendTextToDevice(keyEvent.getText(), KeyAction.UP);
                     }

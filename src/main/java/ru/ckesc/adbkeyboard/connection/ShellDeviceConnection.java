@@ -28,7 +28,7 @@ public class ShellDeviceConnection implements DeviceConnection {
 
             //Alive check
             try {
-                waitFor(adbShellProcess,1, TimeUnit.SECONDS);
+                waitFor(adbShellProcess, 1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -44,6 +44,7 @@ public class ShellDeviceConnection implements DeviceConnection {
     /**
      * Tests whether the subprocess represented by this Process is alive.
      * From JDK8
+     *
      * @return true if the subprocess represented by this Process object has not yet terminated.
      */
     public static boolean isAlive(Process process) {
@@ -55,21 +56,21 @@ public class ShellDeviceConnection implements DeviceConnection {
         }
     }
 
-    public static boolean waitFor(Process process, long timeout, TimeUnit unit) throws InterruptedException{
+    public static boolean waitFor(Process process, long timeout, TimeUnit unit) throws InterruptedException {
         long var4 = System.nanoTime();
         long var6 = unit.toNanos(timeout);
 
-        while(true) {
+        while (true) {
             try {
                 process.exitValue();
                 return true;
             } catch (IllegalThreadStateException var9) {
-                if(var6 > 0L) {
+                if (var6 > 0L) {
                     Thread.sleep(Math.min(TimeUnit.NANOSECONDS.toMillis(var6) + 1L, 100L));
                 }
 
                 var6 = unit.toNanos(timeout) - (System.nanoTime() - var4);
-                if(var6 <= 0L) {
+                if (var6 <= 0L) {
                     return false;
                 }
             }
@@ -93,12 +94,12 @@ public class ShellDeviceConnection implements DeviceConnection {
     }
 
     @Override
-    public void sendEventToDevice(int eventType, KeyAction keyAction) {
+    public void sendEventToDevice(String keyCode, KeyAction keyAction) {
         if (keyAction == KeyAction.UP) {
-            String s = String.format("adb: send keyevent %d", eventType);
+            String s = String.format("adb: send keyevent %s", keyCode);
             System.out.println(s);
             try {
-                adbStdIn.write(String.format("input keyevent %d%n", eventType));
+                adbStdIn.write(String.format("input keyevent %s%n", keyCode));
                 adbStdIn.flush();
                 setConnected(true);
             } catch (IOException e) {
