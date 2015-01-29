@@ -39,7 +39,9 @@ This setting defines time in seconds between checking connectivity
 `keyMap`
 Map pc key to android KeyEvents.
 Left: pc; Right: Android
+
 For pc keycodes look [here (Java FX doc)](https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html)
+
 For android KeyEvent look at [Android doc](http://developer.android.com/reference/android/view/KeyEvent.html)
 
 ## Build
