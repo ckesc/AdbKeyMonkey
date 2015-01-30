@@ -83,8 +83,16 @@ public class Main extends Application {
                 .addKeyMapItem(KeyCode.ENTER, "KEYCODE_DPAD_CENTER")
                 .addKeyMapItem(KeyCode.ESCAPE, "KEYCODE_BACK")
                 .addKeyMapItem(KeyCode.BACK_SPACE, "KEYCODE_DEL")
+                .addKeyMapItem(KeyCode.PERIOD, "KEYCODE_PERIOD")
+                .addKeyMapItem(KeyCode.SPACE, "KEYCODE_SPACE")
+
                 .addKeyMapItem(KeyCode.HOME, "KEYCODE_HOME")
                 .addKeyMapItem(KeyCode.END, "KEYCODE_NOTIFICATION")
+                .addKeyMapItem(KeyCode.INSERT, "KEYCODE_MENU")
+
+                .addKeyMapItem(KeyCode.SHIFT, "KEYCODE_SHIFT_LEFT")
+                .addKeyMapItem(KeyCode.CONTROL, "KEYCODE_CTRL_LEFT")
+                .addKeyMapItem(KeyCode.ALT, "KEYCODE_ALT_LEFT")
 
                 .addKeyMapItem(KeyCode.DIGIT0, "KEYCODE_0")
                 .addKeyMapItem(KeyCode.DIGIT1, "KEYCODE_1")
