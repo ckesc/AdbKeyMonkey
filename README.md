@@ -28,6 +28,22 @@ So before run, connect your device via ADB. Execute `adb devices` to verify.
 * `Backspace` = `Backspace`
 * Letter keys = input letter in android
 
+## Config
+At first run app put `config.json` at working dir.
+You can configure:
+
+`reconnectPeriod`
+App checks connection every 5 sec (by default) and reconnect if no connection
+This setting defines time in seconds between checking connectivity
+
+`keyMap`
+Map pc key to android KeyEvents.
+Left: pc; Right: Android
+
+For pc keycodes look [here (Java FX doc)](https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html)
+
+For android KeyEvent look at [Android doc](http://developer.android.com/reference/android/view/KeyEvent.html)
+
 ## Build
 1. Got jdk 7 or higher
 2. Run `./gradlew build`
@@ -36,7 +52,5 @@ So before run, connect your device via ADB. Execute `adb devices` to verify.
 ## How it`s works
 Speed of operation is achieved through the use of [MonkeyRunner API] (http://developer.android.com/tools/help/monkeyrunner_concepts.html)
 
-[See it in action](http://recordit.co/0vtYFKl1Qb)
-
-![screenshot](http://habrastorage.org/files/850/9d9/3d6/8509d93d6025478f80bfc85e03ae185e.PNG)
+![demo](http://g.recordit.co/0vtYFKl1Qb.gif)
 
