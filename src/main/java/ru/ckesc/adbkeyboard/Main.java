@@ -116,6 +116,10 @@ public class Main extends Application {
                 .addKeyMapItem(KeyCode.NUMPAD8, "KEYCODE_8")
                 .addKeyMapItem(KeyCode.NUMPAD9, "KEYCODE_9")
 
+                .addKeyMapItem(KeyCode.COMMA, "KEYCODE_COMMA")
+                .addKeyMapItem(KeyCode.MINUS, "KEYCODE_MINUS")
+                .addKeyMapItem(KeyCode.PLUS, "KEYCODE_PLUS")
+
                 .build();
 
     }
