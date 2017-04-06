@@ -50,8 +50,8 @@ For android KeyEvent look at [Android doc](http://developer.android.com/referenc
 2. Run `./gradlew build`
 3. Compiled files will be at `./build/distributions`
 
-## How it`s works
-Speed of operation is achieved through the use of [MonkeyRunner API] (http://developer.android.com/tools/help/monkeyrunner_concepts.html)
+## How it works
+Speed of operation is achieved through the use of [MonkeyRunner API](http://developer.android.com/tools/help/monkeyrunner_concepts.html)
 
 ![demo](http://g.recordit.co/0vtYFKl1Qb.gif)
 
